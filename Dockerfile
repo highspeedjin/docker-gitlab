@@ -51,5 +51,12 @@ EXPOSE 22/tcp 80/tcp 443/tcp
 
 VOLUME ["${GITLAB_DATA_DIR}", "${GITLAB_LOG_DIR}"]
 WORKDIR ${GITLAB_INSTALL_DIR}
+
+# Japaneseization
+RUN apt-get update && apt-get -y install patch
+RUN wget -O app_ja.patch https://raw.githubusercontent.com/ksoichiro/gitlab-i18n-patch/master/patches/v8.14.2/app_ja.patch && \
+    patch -p1 < app_ja.patch && \
+    rm app_ja.patch
+
 ENTRYPOINT ["/sbin/entrypoint.sh"]
 CMD ["app:start"]
